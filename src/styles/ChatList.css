@@ -1,0 +1,123 @@
+.chat-list {
+  width: 350px;
+  background-color: #ecf0f1;
+  border-right: 1px solid #bdc3c7;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-list-header {
+  padding: 15px;
+  background-color: #34495e;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-list-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.btn-icon {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.btn-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.chat-list-container {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.empty-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #7f8c8d;
+}
+
+.empty-state p {
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.chat-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid #bdc3c7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.chat-item:hover {
+  background-color: #d5dbdb;
+}
+
+.chat-item.active {
+  background-color: #3498db;
+  color: white;
+}
+
+.chat-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.chat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.last-message {
+  margin: 0;
+  font-size: 13px;
+  color: #7f8c8d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-item.active .last-message {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.unread-badge {
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.chat-item.active .unread-badge {
+  background-color: white;
+  color: #3498db;
+}
