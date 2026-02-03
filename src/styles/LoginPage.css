@@ -23,7 +23,6 @@
 
 .login-page-container {
   position: relative;
-  width: 100%;
   min-height: 100vh;
   background-color: var(--primary-bg);
   overflow: hidden;
@@ -37,7 +36,7 @@
   top: 0;
   right: 0;
   width: 100%;
-  height: 315px;
+  height: 280px;
   background-color: var(--accent-color);
   border-bottom-left-radius: 200px;
   border-bottom-right-radius: 200px;
@@ -46,7 +45,7 @@
 
 .login-page-image {
   position: absolute;
-  top: 180px;
+  top: 120px;
   left: 50%;
   transform: translateX(-50%);
   width: 162px;
@@ -70,7 +69,7 @@
   font-weight: 700;
   color: var(--dark-text);
   text-align: center;
-  margin-top: 80px;
+  margin-top: 40px;
   margin-bottom: 0;
   line-height: 1.1;
   letter-spacing: 0;
@@ -79,7 +78,7 @@
 }
 
 .login-page-content {
-  margin-top: 240px;
+  margin-top: 190px;
   z-index: 2;
   position: relative;
 }
@@ -88,7 +87,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 24px;
 }
 
 /* Input Groups */
@@ -98,10 +97,14 @@
   margin-bottom: 8px;
 }
 
+.login-page-input-group:not(:has(~ .login-page-input-group)) {
+  margin-bottom: 0;
+}
+
 .login-page-label {
   position: absolute;
-  top: -12px;
-  left: 37px;
+  top: -16px;
+  left: 54px;
   background-color: var(--primary-bg);
   padding: 0 12px;
   font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -116,6 +119,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  height: 30px;
   border: 1px solid var(--border-color);
   border-radius: 63px;
   padding: 15px 32px;
@@ -370,7 +374,7 @@
   .login-page-shape {
     position: fixed;
     top: 178px;
-    right: 0;
+    right: 10%;
     left: auto;
     width: 550px;
     height: 939px;
@@ -378,14 +382,10 @@
     z-index: 0;
   }
 
-  .login-page-title {
-    display: none;
-  }
-
   .login-page-image {
     position: fixed;
-    top: 50%;
-    left: 64%;
+    top: 56%;
+    left: 68%;
     transform: translate(-50%, -50%);
     width: 503px;
     height: 500px;
@@ -397,12 +397,11 @@
     line-height: 1.1;
     text-align: center;
     text-shadow: 2px 4px 8px rgba(252, 226, 206, 0.2);
-    margin-top: 198px;
-    margin-bottom: 50px;
+    margin-top: 154px;
+    margin-bottom: 60px;
     color: #424242;
     width: 540px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 200px;
   }
 
   .login-page-content {
@@ -412,17 +411,17 @@
   }
 
   .login-page-form {
-    gap: 14px;
+    gap: 4px;
   }
 
   .login-page-input-group {
-    margin-bottom: 16px;
+    margin-bottom: 22px;
   }
 
   .login-page-label {
     font-size: 24px;
     font-weight: 500;
-    left: 55px;
+    left: 62px;
   }
 
   .login-page-input-wrapper {
@@ -446,8 +445,6 @@
 
   .login-page-forgot {
     text-align: right;
-    margin-top: 16px;
-    margin-bottom: 16px;
   }
 
   .login-page-forgot a {
@@ -459,12 +456,12 @@
   .login-page-button {
     padding: 12px 10px;
     font-size: 24px;
-    margin-top: 32px;
+    margin-top: 80px;
     width: 540px;
   }
 
   .login-page-divider {
-    margin: 24px 0;
+    margin: 12px 0;
     font-size: 18px;
     letter-spacing: 0.2px;
   }
@@ -475,7 +472,7 @@
 
   .login-page-social {
     gap: 30px;
-    margin: 24px 0;
+    margin: 12px 0;
     justify-content: center;
   }
 
@@ -491,7 +488,7 @@
   }
 
   .login-page-signup {
-    margin-top: 60px;
+    margin-top: 24px;
     font-size: 18px;
     gap: 4px;
   }
