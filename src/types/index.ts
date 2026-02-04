@@ -1,6 +1,7 @@
 // User types
 export interface User {
   id: string;
+  name: string;
   username: string;
   email: string;
   avatar?: string;
@@ -53,7 +54,7 @@ export type Chat = PrivateChat | GroupChat;
 
 // Form types
 export interface LoginFormData {
-  email: string;
+  identifier: string;
   password: string;
 }
 

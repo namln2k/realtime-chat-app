@@ -1,5 +1,6 @@
-import { createContext, useContext, useReducer, type ReactNode } from 'react';
+import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react';
 import { type AuthState } from '../types';
+import apiService from '../services/apiService';
 
 interface AuthAction {
   type: 'LOGIN_START' | 'LOGIN_SUCCESS' | 'LOGIN_ERROR' | 'LOGOUT' | 'REGISTER_START' | 'REGISTER_SUCCESS' | 'REGISTER_ERROR';
@@ -9,7 +10,7 @@ interface AuthAction {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
   error: null,
 };
 
@@ -39,14 +40,19 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         error: action.payload,
       };
     case 'LOGOUT':
-      return initialState;
+      return {
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null,
+      };
     default:
       return state;
   }
 };
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   dispatch: React.Dispatch<AuthAction>;
@@ -57,13 +63,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const login = async (email: string, password: string) => {
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const user = await apiService.getCurrentUser();
+        dispatch({ type: 'LOGIN_SUCCESS', payload: user });
+      } catch (error) {
+        dispatch({ type: 'LOGIN_ERROR', payload: null });
+      }
+    };
+    checkAuth();
+  }, []);
+
+  const login = async (identifier: string, password: string) => {
     dispatch({ type: 'LOGIN_START' });
     try {
-      // TODO: Replace with actual API call
-      // const response = await apiService.login(email, password);
-      // dispatch({ type: 'LOGIN_SUCCESS', payload: response.user });
-      console.log('Login:', email, password);
+      const { user } = await apiService.login(identifier, password);
+      dispatch({ type: 'LOGIN_SUCCESS', payload: user });
     } catch (error) {
       dispatch({ type: 'LOGIN_ERROR', payload: (error as Error).message });
     }
@@ -82,8 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
+    apiService.logout().catch(console.error);
     dispatch({ type: 'LOGOUT' });
-    // TODO: Clear local storage, etc.
   };
 
   return (

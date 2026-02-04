@@ -7,32 +7,27 @@ class ApiService {
     'Content-Type': 'application/json',
   };
 
-  private getAuthToken(): string | null {
-    return localStorage.getItem('authToken');
-  }
+
 
   private getHeaders() {
-    const token = this.getAuthToken();
-    return {
-      ...this.headers,
-      ...(token && { Authorization: `Bearer ${token}` }),
-    };
+    return this.headers;
   }
 
   // Auth endpoints
-  async login(email: string, password: string): Promise<{ user: User; token: string }> {
+  async login(identifier: string, password: string): Promise<{ user: User; token: string }> {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ identifier, password }),
+      credentials: 'include',
     });
 
     if (!response.ok) {
-      throw new Error('Login failed');
+      const errorData = await response.json();
+      throw new Error(`Login failed: ${errorData.message || ''}`);
     }
 
     const data = await response.json();
-    localStorage.setItem('authToken', data.token);
     return data;
   }
 
@@ -45,6 +40,7 @@ class ApiService {
       method: 'POST',
       headers: this.headers,
       body: JSON.stringify({ username, email, password }),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -52,17 +48,20 @@ class ApiService {
     }
 
     const data = await response.json();
-    localStorage.setItem('authToken', data.token);
     return data;
   }
 
   async logout(): Promise<void> {
-    localStorage.removeItem('authToken');
+    await fetch(`${API_BASE_URL}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
   }
 
   async getCurrentUser(): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -76,6 +75,7 @@ class ApiService {
   async getChats(): Promise<(PrivateChat | GroupChat)[]> {
     const response = await fetch(`${API_BASE_URL}/chats`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -88,6 +88,7 @@ class ApiService {
   async getMessages(chatId: string): Promise<Message[]> {
     const response = await fetch(`${API_BASE_URL}/chats/${chatId}/messages`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -102,6 +103,7 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ content }),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -116,6 +118,7 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ participantId }),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -134,6 +137,7 @@ class ApiService {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ name, memberIds, description }),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -147,6 +151,7 @@ class ApiService {
     const response = await fetch(`${API_BASE_URL}/chats/${chatId}`, {
       method: 'DELETE',
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -157,6 +162,7 @@ class ApiService {
   async searchUsers(query: string): Promise<User[]> {
     const response = await fetch(`${API_BASE_URL}/users/search?q=${encodeURIComponent(query)}`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -169,6 +175,7 @@ class ApiService {
   async getUser(userId: string): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
       headers: this.getHeaders(),
+      credentials: 'include',
     });
 
     if (!response.ok) {

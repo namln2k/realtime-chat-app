@@ -6,21 +6,54 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import './App.css';
 
-function AppContent() {
-  const { user } = useAuth();
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { MePage } from './pages/MePage';
 
-  // TODO: Implement routing (use react-router-dom)
-  // For now, this is a simple structure. Install react-router-dom:
-  // npm install react-router-dom
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   
   if (!user) {
-    return <LoginPage />;
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function AppContent() {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return (
-    <ChatProvider>
-      <ChatPage />
-    </ChatProvider>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route 
+        path="/me" 
+        element={
+          <ProtectedRoute>
+            <MePage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/" 
+        element={
+          <ProtectedRoute>
+            <ChatProvider>
+              <ChatPage />
+            </ChatProvider>
+          </ProtectedRoute>
+        } 
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 

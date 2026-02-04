@@ -1,19 +1,13 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useForm } from '../../hooks/useForm';
+import { useNavigate } from 'react-router-dom';
 import { type LoginFormData } from '../../types';
 import '../../styles/LoginPage.css';
 
 // Asset images from Figma (Mobile & Desktop designs)
 const youngManImage = 'https://www.figma.com/api/mcp/asset/a7f76790-dac5-4abc-bc44-3d8c16a0fcd5';
-// Mail icon vector components
-const mailIconVector1 = 'https://www.figma.com/api/mcp/asset/203f31bb-7833-41b4-babd-835825a79b99';
-const mailIconVector2 = 'https://www.figma.com/api/mcp/asset/fc461588-3ac3-4745-bf48-783ad5d7adb5';
-// Lock icon vector components
-const lockIconVector1 = 'https://www.figma.com/api/mcp/asset/9639100f-a404-40a9-ab69-9883a7950d62';
-const lockIconVector2 = 'https://www.figma.com/api/mcp/asset/1a2186c5-c42a-41b6-97d5-c827f3385d8d';
-// Eye off icon
-const eyeOffIcon = 'https://www.figma.com/api/mcp/asset/e5787181-37e4-4057-a205-a97177ea63f0';
+
 // Social icons
 const googleIcon = 'https://www.figma.com/api/mcp/asset/6f61d4f7-973e-4554-9915-5b6bd72458bc';
 const facebookIcon = 'https://www.figma.com/api/mcp/asset/f57db32c-69b9-40d3-a323-bf5eddf57330';
@@ -21,15 +15,14 @@ const linkedinIcon = 'https://www.figma.com/api/mcp/asset/cfe16569-3600-46d2-897
 
 export function LoginForm() {
     const { login, isLoading, error } = useAuth();
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
     const validateForm = (values: LoginFormData) => {
         const errors: Partial<Record<keyof LoginFormData, string>> = {};
 
-        if (!values.email) {
-            errors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-            errors.email = 'Email is invalid';
+        if (!values.identifier) {
+            errors.identifier = 'Username or Email is required';
         }
 
         if (!values.password) {
@@ -43,10 +36,11 @@ export function LoginForm() {
 
     const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting } =
         useForm({
-            initialValues: { email: '', password: '' },
+            initialValues: { identifier: '', password: '' },
             validate: validateForm,
             onSubmit: async (values) => {
-                await login(values.email, values.password);
+                await login(values.identifier, values.password);
+                navigate('/me');
             },
         });
 
@@ -68,29 +62,29 @@ export function LoginForm() {
                 {error && <div className="login-page-alert alert-error">{error}</div>}
 
                 <form onSubmit={handleSubmit} className="login-page-form">
-                    {/* Email Field */}
+                    {/* Identifier Field (Username or Email) */}
                     <div className="login-page-input-group">
                         <div className="login-page-input-wrapper">
                             <div className="login-page-input-icon">
                                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M2 6L11 13L20 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                             <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={values.email}
+                                type="text"
+                                id="identifier"
+                                name="identifier"
+                                value={values.identifier}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                placeholder="email@gmail.com"
+                                placeholder="Enter your username or email"
                                 disabled={isSubmitting || isLoading}
                                 className="login-page-input"
                             />
                         </div>
-                        <label htmlFor="email" className="login-page-label">Email</label>
-                        <span className="login-page-error" style={{ visibility: touched.email && errors.email ? 'visible' : 'hidden' }}>{errors.email}!</span>
+                        <label htmlFor="identifier" className="login-page-label">Username or Email</label>
+                        <span className="login-page-error" style={{ visibility: touched.identifier && errors.identifier ? 'visible' : 'hidden' }}>{errors.identifier}!</span>
                     </div>
 
                     {/* Password Field */}

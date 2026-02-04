@@ -264,7 +264,9 @@
 .login-page-alert {
   padding: 12px;
   border-radius: 8px;
-  margin-bottom: 16px;
+  position: absolute;
+  margin-top: -72px;
+  width: 100%;
   font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 14px;
   line-height: 1.4;
@@ -397,8 +399,8 @@
     line-height: 1.1;
     text-align: center;
     text-shadow: 2px 4px 8px rgba(252, 226, 206, 0.2);
-    margin-top: 154px;
-    margin-bottom: 60px;
+    margin-top: 80px;
+    margin-bottom: 134px;
     color: #424242;
     width: 540px;
     margin-left: 200px;
