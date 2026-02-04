@@ -3,7 +3,6 @@ import { ChatList } from '../components/chat/ChatList';
 import { ChatWindow } from '../components/chat/ChatWindow';
 import { Header } from '../components/common/Header';
 import { useChat } from '../context/ChatContext';
-import '../styles/ChatPage.css';
 
 export function ChatPage() {
   const { loadChats } = useChat();
@@ -13,9 +12,9 @@ export function ChatPage() {
   }, [loadChats]);
 
   return (
-    <div className="chat-page">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden transition-colors duration-300">
       <Header />
-      <div className="chat-main">
+      <div className="flex flex-1 overflow-hidden pt-0">
         <ChatList />
         <ChatWindow />
       </div>
