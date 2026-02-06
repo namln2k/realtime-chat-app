@@ -21,8 +21,8 @@ export function Input({
   const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
   return (
-    <div className={`relative w-full mb-2 lg:mb-5 ${className}`}>
-      <div className="flex items-center gap-3 h-12 border border-chat-border rounded-full px-8 bg-primary-bg relative lg:px-8 lg:py-4 lg:h-auto dark:bg-primary-dark dark:border-gray-700">
+    <div className={`relative w-full mb-2 lg:mb-3 ${className}`}>
+      <div className="flex items-center gap-3 h-12 border border-chat-border rounded-full px-8 bg-primary-bg relative lg:px-8 lg:py-3 lg:h-auto dark:bg-primary-dark dark:border-gray-700">
         {icon && (
           <div className="w-5 h-5 flex items-center justify-center shrink-0 lg:w-7 lg:h-7 text-chat-border">
             {icon}
@@ -30,6 +30,7 @@ export function Input({
         )}
         <input
           {...props}
+          value={props.value ?? ''}
           type={inputType}
           className="flex-1 border-none bg-transparent min-w-36 font-rubik text-base font-normal text-chat-lightText tracking-wide outline-none placeholder:text-chat-placeholder disabled:opacity-60 disabled:cursor-not-allowed focus:text-chat-darkText dark:text-gray-300 dark:placeholder:text-gray-500"
         />

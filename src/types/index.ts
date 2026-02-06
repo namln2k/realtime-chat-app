@@ -1,11 +1,18 @@
 // User types
+export const UserRole = {
+  ADMIN: 'admin',
+  USER: 'user',
+} as const;
+
+export type UserRole = typeof UserRole[keyof typeof UserRole];
+
 export interface User {
   id: string;
   name: string;
   username: string;
   email: string;
+  roles: UserRole[];
   avatar?: string;
-  status: 'online' | 'offline' | 'away';
   createdAt: Date;
 }
 
@@ -59,6 +66,7 @@ export interface LoginFormData {
 }
 
 export interface RegisterFormData {
+  name: string;
   username: string;
   email: string;
   password: string;

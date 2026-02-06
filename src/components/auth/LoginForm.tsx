@@ -3,14 +3,9 @@ import { useForm } from '../../hooks/useForm';
 import { useNavigate } from 'react-router-dom';
 import { type LoginFormData } from '../../types';
 import { Input } from '../common/Input';
-
-// Asset images from Figma (Mobile & Desktop designs)
-const youngManImage = 'https://www.figma.com/api/mcp/asset/a7f76790-dac5-4abc-bc44-3d8c16a0fcd5';
-
-// Social icons
-const googleIcon = 'https://www.figma.com/api/mcp/asset/6f61d4f7-973e-4554-9915-5b6bd72458bc';
-const facebookIcon = 'https://www.figma.com/api/mcp/asset/f57db32c-69b9-40d3-a323-bf5eddf57330';
-const linkedinIcon = 'https://www.figma.com/api/mcp/asset/cfe16569-3600-46d2-897b-807865e3fb2a';
+import { SocialLogin } from './SocialLogin';
+import heroImage from '../../assets/images/auth-hero.png';
+import { Loading } from '../common/Loading';
 
 export function LoginForm() {
     const { login, isLoading, error } = useAuth();
@@ -37,29 +32,34 @@ export function LoginForm() {
             initialValues: { identifier: '', password: '' },
             validate: validateForm,
             onSubmit: async (values) => {
-                await login(values.identifier, values.password);
-                navigate('/me');
+                try {
+                    await login(values.identifier, values.password);
+                    navigate('/me');
+                } catch (err) {
+                    console.error('Login failed:', err);
+                }
             },
         });
 
     return (
         <div className="relative flex flex-col items-center min-h-screen bg-primary-bg overflow-hidden lg:items-stretch lg:justify-center dark:bg-primary-dark">
+            {(isLoading || isSubmitting) && <Loading fullScreen message="Logging in..." />}
             {/* Decorative background shape */}
             <div className="absolute top-0 right-0 w-full h-52 bg-accent rounded-bl-full rounded-br-full z-0 lg:fixed lg:top-40 lg:right-[10%] lg:left-auto lg:w-[540px] lg:h-[900px] lg:rounded-t-[400px] lg:rounded-b-none dark:bg-accent-dark"></div>
 
             {/* Page title */}
-            <h1 className="relative z-20 font-rubik text-4xl lg:text-7xl font-bold text-chat-darkText text-center mt-10 leading-none lg:text-[48px] lg:mt-8 lg:mb-16 lg:ml-[8%] lg:w-[540px] lg:text-[#424242] dark:text-gray-100">Login</h1>
+            <h1 className="relative z-20 font-rubik text-4xl lg:text-7xl font-bold text-chat-darkText text-center mt-10 leading-none lg:text-[48px] lg:mt-6 lg:mb-24 lg:ml-[8%] lg:w-[540px] lg:text-[#424242] dark:text-gray-100">Login</h1>
 
             {/* Hero image */}
             <div className="absolute top-28 left-1/2 -translate-x-1/2 w-40 h-32 flex items-center justify-center z-10 lg:fixed lg:top-[56%] lg:left-[68%] lg:-translate-y-1/2 lg:w-[500px] lg:h-[500px]">
-                <img src={youngManImage} alt="Young man with laptop" className="w-full h-full object-contain pointer-events-none" />
+                <img src={heroImage} alt="Young man with laptop" className="w-full h-full object-contain pointer-events-none" />
             </div>
 
             {/* Main content */}
-            <div className="relative z-20 mt-52 lg:mt-0 lg:ml-[8%] lg:max-w-[540px] w-full max-w-[400px] px-8 sm:max-w-[450px] sm:mx-auto lg:mx-0">
-                {error && <div className="p-3 rounded-lg absolute -mt-[72px] w-[calc(100%-64px)] font-rubik text-sm leading-relaxed bg-red-50 text-chat-error border border-red-200">{error}</div>}
+            <div className="relative z-20 mt-52 lg:mt-0 lg:ml-[8%] lg:max-w-[540px] w-full max-w-[400px] px-8 sm:max-w-[450px] sm:mx-auto lg:mx-0 pb-6 lg:pb-0">
+                {error && <div className="p-3 rounded-lg absolute -mt-20 w-[calc(100%-64px)] font-rubik text-sm leading-relaxed bg-red-50 text-chat-error border border-red-200">{error}</div>}
 
-                <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3 lg:gap-1">
+                <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3 lg:gap-1 mb-4">
                     <Input
                         label="Username or Email"
                         id="identifier"
@@ -99,7 +99,7 @@ export function LoginForm() {
                     />
 
                     {/* Forgot Password */}
-                    <div className="text-right">
+                    <div className="text-right mb-2 lg:mb-6">
                         <a href="/forgot-password" title="Forgot Password" className="font-rubik text-sm lg:text-xl font-medium lg:font-semibold text-chat-lightText tracking-wide transition-colors hover:text-chat-link dark:text-gray-400">Forgot Password?</a>
                     </div>
 
@@ -114,26 +114,12 @@ export function LoginForm() {
                 </form>
 
                 {/* Social Login */}
-                <div className="text-center opacity-40">
-                    <span className="font-rubik text-base lg:text-[18px] font-normal text-chat-darkText tracking-wide leading-relaxed dark:text-gray-100">- or -</span>
-                </div>
-
-                <div className="flex justify-center gap-5 lg:gap-[30px] my-3">
-                    <button className="w-12 h-12 lg:w-[58px] lg:h-[58px] border-none bg-primary-bg rounded-full p-3 lg:p-[15px] cursor-pointer flex items-center justify-center transition-all hover:bg-accent hover:-translate-y-[2px] disabled:opacity-60 disabled:cursor-not-allowed dark:bg-gray-800 dark:hover:bg-gray-700" type="button" disabled={isSubmitting || isLoading}>
-                        <img src={googleIcon} alt="Google" className="w-6 h-6 lg:w-7 lg:h-7 object-contain" />
-                    </button>
-                    <button className="w-12 h-12 lg:w-[58px] lg:h-[58px] border-none bg-primary-bg rounded-full p-3 lg:p-[15px] cursor-pointer flex items-center justify-center transition-all hover:bg-accent hover:-translate-y-[2px] disabled:opacity-60 disabled:cursor-not-allowed dark:bg-gray-800 dark:hover:bg-gray-700" type="button" disabled={isSubmitting || isLoading}>
-                        <img src={facebookIcon} alt="Facebook" className="w-6 h-6 lg:w-7 lg:h-7 object-contain" />
-                    </button>
-                    <button className="w-12 h-12 lg:w-[58px] lg:h-[58px] border-none bg-primary-bg rounded-full p-3 lg:p-[15px] cursor-pointer flex items-center justify-center transition-all hover:bg-accent hover:-translate-y-[2px] disabled:opacity-60 disabled:cursor-not-allowed dark:bg-gray-800 dark:hover:bg-gray-700" type="button" disabled={isSubmitting || isLoading}>
-                        <img src={linkedinIcon} alt="LinkedIn" className="w-6 h-6 lg:w-7 lg:h-7 object-contain" />
-                    </button>
-                </div>
+                <SocialLogin disabled={isSubmitting || isLoading} />
 
                 {/* Sign Up Link */}
                 <div className="text-center mt-[10px] lg:mt-6 flex justify-center gap-1 font-rubik text-base lg:text-[18px] tracking-wide leading-relaxed">
                     <span className="font-normal text-chat-darkText opacity-40 dark:text-gray-100">Don't have an account?</span>
-                    <a href="/register" className="font-semibold text-chat-link transition-colors hover:text-chat-darkText dark:hover:text-gray-100 underline decoration-chat-link underline-offset-4">Sign up</a>
+                    <a href="/register" className="font-semibold text-chat-link transition-colors hover:text-chat-darkText dark:hover:text-gray-100 decoration-chat-link underline-offset-4">Sign up</a>
                 </div>
             </div>
         </div>

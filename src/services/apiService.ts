@@ -32,6 +32,7 @@ class ApiService {
   }
 
   async register(
+    name: string,
     username: string,
     email: string,
     password: string
@@ -39,7 +40,7 @@ class ApiService {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ name, username, email, password }),
       credentials: 'include',
     });
 
@@ -180,6 +181,22 @@ class ApiService {
 
     if (!response.ok) {
       throw new Error('Failed to fetch user');
+    }
+
+    return response.json();
+  }
+
+  async updateUser(data: { name?: string; avatar?: string }): Promise<User> {
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: 'PATCH',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to update user profile');
     }
 
     return response.json();

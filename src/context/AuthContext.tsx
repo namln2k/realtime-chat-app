@@ -3,7 +3,7 @@ import { type AuthState } from '../types';
 import apiService from '../services/apiService';
 
 interface AuthAction {
-  type: 'LOGIN_START' | 'LOGIN_SUCCESS' | 'LOGIN_ERROR' | 'LOGOUT' | 'REGISTER_START' | 'REGISTER_SUCCESS' | 'REGISTER_ERROR';
+  type: 'LOGIN_START' | 'LOGIN_SUCCESS' | 'LOGIN_ERROR' | 'LOGOUT' | 'REGISTER_START' | 'REGISTER_SUCCESS' | 'REGISTER_ERROR' | 'UPDATE_USER';
   payload?: any;
 }
 
@@ -25,6 +25,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
       };
     case 'LOGIN_SUCCESS':
     case 'REGISTER_SUCCESS':
+    case 'UPDATE_USER':
       return {
         ...state,
         user: action.payload,
@@ -36,6 +37,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
     case 'REGISTER_ERROR':
       return {
         ...state,
+        isAuthenticated: false,
         isLoading: false,
         error: action.payload,
       };
@@ -53,7 +55,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 
 interface AuthContextType extends AuthState {
   login: (identifier: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (name: string, username: string, email: string, password: string) => Promise<void>;
+  updateProfile: (data: { name?: string; avatar?: string }) => Promise<void>;
   logout: () => void;
   dispatch: React.Dispatch<AuthAction>;
 }
@@ -82,18 +85,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'LOGIN_SUCCESS', payload: user });
     } catch (error) {
       dispatch({ type: 'LOGIN_ERROR', payload: (error as Error).message });
+      throw error;
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (name: string, username: string, email: string, password: string) => {
     dispatch({ type: 'REGISTER_START' });
     try {
-      // TODO: Replace with actual API call
-      // const response = await apiService.register(username, email, password);
-      // dispatch({ type: 'REGISTER_SUCCESS', payload: response.user });
-      console.log('Register:', username, email, password);
+      const { user } = await apiService.register(name, username, email, password);
+      dispatch({ type: 'REGISTER_SUCCESS', payload: user });
     } catch (error) {
       dispatch({ type: 'REGISTER_ERROR', payload: (error as Error).message });
+      throw error;
+    }
+  };
+
+  const updateProfile = async (data: { name?: string; avatar?: string }) => {
+    try {
+      const updatedUser = await apiService.updateUser(data);
+      dispatch({ type: 'UPDATE_USER', payload: updatedUser });
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      throw error;
     }
   };
 
@@ -103,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout, dispatch }}>
+    <AuthContext.Provider value={{ ...state, login, register, updateProfile, logout, dispatch }}>
       {children}
     </AuthContext.Provider>
   );

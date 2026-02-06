@@ -63,7 +63,6 @@ export function ChatWindow() {
                     className="w-11 h-11 rounded-2xl object-cover ring-2 ring-gray-100 dark:ring-gray-700 shadow-sm" 
                     alt="Current chat" 
                 />
-                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full shadow-sm"></div>
             </div>
             <div>
                 <h2 className="text-[17px] font-extrabold text-gray-900 dark:text-white font-rubik tracking-tight leading-none mb-1">
@@ -137,6 +136,8 @@ export function ChatWindow() {
                 placeholder="Type your message here..."
                 disabled={isSending}
                 className="w-full bg-gray-50 border border-transparent rounded-2xl px-6 py-4 text-sm font-semibold text-gray-700 outline-none focus:bg-white focus:border-accent group-hover:bg-gray-100/50 dark:bg-gray-900 dark:border-transparent dark:text-gray-200 dark:focus:border-accent-dark dark:focus:bg-gray-900/50 dark:group-hover:bg-gray-900/80 disabled:opacity-50 transition-all duration-300"
+                id="message-input"
+                name="message"
               />
               <button type="button" className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-accent transition-colors duration-200">
                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

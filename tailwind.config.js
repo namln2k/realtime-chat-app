@@ -8,11 +8,11 @@ export default {
     extend: {
       colors: {
         primary: {
-          bg: "#fef6ef",
+          bg: "#ffecdc",
           dark: "#1a1a1a", // from dark mode
         },
         accent: {
-          DEFAULT: "#fce2ce",
+          DEFAULT: "#eec19f",
           dark: "#2d2d2d", // from dark mode
         },
         chat: {
@@ -20,7 +20,7 @@ export default {
           lightText: "#616161",
           placeholder: "#9e9e9e",
           border: "#757575",
-          buttonBg: "#fce2ce",
+          buttonBg: "#eec19f",
           buttonText: "#92613a",
           link: "#c3824e",
           error: "#d32f2f",

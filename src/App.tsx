@@ -6,8 +6,16 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { MePage } from './pages/MePage';
+import { AdminPage } from './pages/AdminPage';
+import { ConfigPage } from './pages/ConfigPage';
+import { UserRole } from './types';
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  requiredRole?: 'user' | 'admin';
+}
+
+function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth();
   
   if (isLoading) {
@@ -20,6 +28,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (requiredRole && !user.roles.includes(requiredRole as UserRole)) {
+    // If user is admin but route requires 'user', they might not have 'user' role explicitly but admin usually implies user
+    // However, if route requires 'admin' and user doesn't have it, redirect them away
+    if (requiredRole === 'admin' && !user.roles.includes(UserRole.ADMIN)) {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <>{children}</>;
@@ -45,6 +61,22 @@ function AppContent() {
         element={
           <ProtectedRoute>
             <MePage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin" 
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminPage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/config" 
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <ConfigPage />
           </ProtectedRoute>
         } 
       />

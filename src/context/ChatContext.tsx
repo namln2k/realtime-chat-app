@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, type ReactNode } from 'react';
+import { createContext, useContext, useReducer, useCallback, type ReactNode } from 'react';
 import { type Chat, type Message } from '../types';
 
 interface ChatState {
@@ -108,11 +108,11 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(chatReducer, initialState);
 
-  const selectChat = (chat: Chat) => {
+  const selectChat = useCallback((chat: Chat) => {
     dispatch({ type: 'SELECT_CHAT', payload: chat });
-  };
+  }, []);
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = useCallback(async (content: string) => {
     if (!state.currentChat) return;
     try {
       // TODO: Replace with actual API call
@@ -129,9 +129,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Failed to send message:', error);
     }
-  };
+  }, [state.currentChat]);
 
-  const loadChats = async () => {
+  const loadChats = useCallback(async () => {
     dispatch({ type: 'LOAD_CHATS_START' });
     try {
       // TODO: Replace with actual API call
@@ -140,9 +140,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       dispatch({ type: 'LOAD_CHATS_ERROR', payload: (error as Error).message });
     }
-  };
+  }, []);
 
-  const loadMessages = async (chatId: string) => {
+  const loadMessages = useCallback(async (chatId: string) => {
     try {
       // TODO: Replace with actual API call
       // const response = await apiService.getMessages(chatId);
@@ -153,9 +153,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Failed to load messages:', error);
     }
-  };
+  }, []);
 
-  const createPrivateChat = async (participantId: string) => {
+  const createPrivateChat = useCallback(async (participantId: string) => {
     try {
       // TODO: Replace with actual API call
       // const response = await apiService.createPrivateChat(participantId);
@@ -163,9 +163,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Failed to create private chat:', error);
     }
-  };
+  }, []);
 
-  const createGroupChat = async (name: string, memberIds: string[], description?: string) => {
+  const createGroupChat = useCallback(async (name: string, memberIds: string[], description?: string) => {
     try {
       // TODO: Replace with actual API call
       // const response = await apiService.createGroupChat(name, memberIds, description);
@@ -173,12 +173,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Failed to create group chat:', error);
     }
-  };
+  }, []);
 
-  const deleteChat = (chatId: string) => {
+  const deleteChat = useCallback((chatId: string) => {
     dispatch({ type: 'DELETE_CHAT', payload: chatId });
     // TODO: Call API to delete chat
-  };
+  }, []);
 
   return (
     <ChatContext.Provider
