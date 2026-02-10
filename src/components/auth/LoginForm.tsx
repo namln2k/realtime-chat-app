@@ -34,7 +34,7 @@ export function LoginForm() {
             onSubmit: async (values) => {
                 try {
                     await login(values.identifier, values.password);
-                    navigate('/me');
+                    navigate('/');
                 } catch (err) {
                     console.error('Login failed:', err);
                 }
