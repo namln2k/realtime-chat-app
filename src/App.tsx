@@ -1,3 +1,4 @@
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { ChatProvider } from './context/ChatContext';
 import { useAuth } from './context/AuthContext';
@@ -98,6 +99,7 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
+      <Toaster position="top-center" />
       <AppContent />
     </AuthProvider>
   );

@@ -1,3 +1,4 @@
+import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { useForm } from '../../hooks/useForm';
 import { useNavigate } from 'react-router-dom';
@@ -58,6 +59,13 @@ export function RegisterForm() {
       onSubmit: async (values) => {
         try {
           await register(values.name, values.username, values.email, values.password);
+          toast.success('Registration successful! You can now update your avatar and display name.', {
+            duration: 50000,
+            style: {
+              background: '#333',
+              color: '#fff',
+            },
+          });
           navigate('/me');
         } catch (err) {
           console.log(err);
